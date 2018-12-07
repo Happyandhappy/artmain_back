@@ -1,0 +1,10 @@
+django
+mongoengine
+django-rest-framework-mongoengine
+djangorestframework
+djangorestframework-jwt
+django-environ
+django-heroku
+django-tenant-schemas
+django-cors-headers
+gunicorn

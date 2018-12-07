@@ -222,7 +222,7 @@ class ResetPasswordConfirm(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer = PasswordTokenSerializer(request.data)
+        serializer = PasswordTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         old_password = serializer.validated_data['old_password']
         new_password = serializer.validated_data['new_password']
@@ -236,7 +236,7 @@ class ResetPasswordConfirm(APIView):
 
         if reset_password_token is None:
             return Response({
-                "status":"success",
+                "status":"failed",
                 "message":"Token not found"
             }, status=status.HTTP_404_NOT_FOUND)
 
@@ -250,7 +250,14 @@ class ResetPasswordConfirm(APIView):
                 "status":"failed",
                 "message":"Token was expired"
             }, status=status.HTTP_404_NOT_FOUND)
-        if not old_password == reset_password_token.user.password:
+
+        # check old password
+        credentials = {
+            'username': reset_password_token.user.username,
+            'password': old_password
+        }
+        user = authenticate(**credentials)
+        if not user:
             return Response({
                 "status":"failed",
                 "message":"Incorrect old password"
@@ -259,7 +266,7 @@ class ResetPasswordConfirm(APIView):
             reset_password_token.user.set_password(new_password)
             reset_password_token.user.save()
         # delete used token
-        ResetPasswordToken.filter(user=reset_password_token.user).delete()
+        ResetPasswordToken.objects.filter(user=reset_password_token.user).delete()
         return Response({
             "status":"success",
             "message":"successfully changed"

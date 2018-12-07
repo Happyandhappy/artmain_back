@@ -14,6 +14,7 @@ import os
 import datetime
 import environ
 from corsheaders.defaults import default_headers
+import mongoengine
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -43,7 +44,7 @@ ALLOWED_HOSTS = ["127.0.0.1:4200","127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
-    'api',
+    'authapi',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +101,13 @@ DATABASES = {
         'OPTIONS': {'sslmode': 'require'},
     }
 }
+
+# mongoDB configuration
+
+mongoengine.connect(
+    db=env.str('MONGO_DB'),
+    host=env.str('MONGO_HOST')
+)
 
 
 # Password validation
