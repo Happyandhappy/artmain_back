@@ -45,6 +45,8 @@ ALLOWED_HOSTS = ["127.0.0.1:4200","127.0.0.1"]
 
 INSTALLED_APPS = [
     'authapi',
+    'masterapi',
+    'transactionapi',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

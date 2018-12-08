@@ -8,3 +8,4 @@ django-heroku
 django-tenant-schemas
 django-cors-headers
 gunicorn
+pymongo
