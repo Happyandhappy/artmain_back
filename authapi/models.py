@@ -2,6 +2,7 @@ import binascii
 import os
 from django.conf import settings
 from django.db import models
+
 from django.utils.translation import ugettext_lazy as _
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -53,3 +54,6 @@ class ResetPasswordToken(models.Model):
         return super(ResetPasswordToken, self).save(*args, **kwargs)
     def __str__(self):
         return "Password reset token for user {user}".format(user=self.user)
+
+
+

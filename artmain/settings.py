@@ -38,12 +38,35 @@ SECRET_KEY = 'dhk0b!z*nkl$nk%zr6u^vwdk_vba*!l7($u)o0!+0e8i+!kkcw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1:4200","127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
+# shared apps in tenants
+SHARED_APPS = (
+    'tenant_schemas',  # mandatory
+    'tenants',  # you must list the app where your tenant model resides in
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'masterapi',
+)
+
+TENANT_APPS = (
+    # The following Django contrib apps must be in TENANT_APPS
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'authapi',
+    'transactionapi',
+)
+
 
 INSTALLED_APPS = [
+    'tenant_schemas',
+    'tenants',
     'authapi',
     'masterapi',
     'transactionapi',
@@ -58,6 +81,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'tenant_schemas.middleware.TenantMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,8 +92,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', # Note that this needs to be placed above CommonMiddleware
 ]
 
+TENANT_MODEL = "tenants.TenantMaster"  # app.Model
+AUTH_USER_MODEL = "tenants.User"
 ROOT_URLCONF = 'artmain.urls'
-
+AUTHENTICATION_BACKENDS = (
+        # 'django.contrib.auth.backends.RemoteUserBackend',
+        'django.contrib.auth.backends.ModelBackend',
+)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -94,7 +123,7 @@ WSGI_APPLICATION = 'artmain.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',#'tenant_schemas.postgresql_backend',
+        'ENGINE': 'tenant_schemas.postgresql_backend',#'tenant_schemas.postgresql_backend',
         'NAME': env.str('DB_NAME'),
         'USER': env.str('DB_USER'),
         'PASSWORD': env.str('DB_PASS'),
@@ -103,6 +132,11 @@ DATABASES = {
         'OPTIONS': {'sslmode': 'require'},
     }
 }
+##Add tenant_schemas.routers.TenantSyncRouter to your DATABASE_ROUTERS setting,
+##so that the correct apps can be synced, depending on what’s being synced (shared or tenant).
+DATABASE_ROUTERS = (
+    'tenant_schemas.routers.TenantSyncRouter',
+)
 
 # mongoDB configuration
 
@@ -131,13 +165,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-##Add tenant_schemas.routers.TenantSyncRouter to your DATABASE_ROUTERS setting,
-##so that the correct apps can be synced, depending on what’s being synced (shared or tenant).
-"""
-DATABASE_ROUTERS = (
-    'tenant_schemas.routers.TenantSyncRouter',
-)
-"""
+
+DEFAULT_FILE_STORAGE = 'tenant_schemas.storage.TenantFileSystemStorage'
 
 ## ERST framework
 REST_FRAMEWORK = {
