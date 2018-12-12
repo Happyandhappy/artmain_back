@@ -52,7 +52,6 @@ SHARED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'masterapi',
 )
 
 TENANT_APPS = (
@@ -61,6 +60,7 @@ TENANT_APPS = (
     'django.contrib.auth',
     'authapi',
     'transactionapi',
+    'masterapi',
 )
 
 

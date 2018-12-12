@@ -2,24 +2,24 @@ from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.conf import  settings
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from django.template import loader
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_jwt.settings import api_settings
 from rest_framework import status
 import jwt
 from artmain.settings import SECRET_KEY
-
 from django.core.mail import EmailMultiAlternatives
-
-
 from .serializer import UserSerializer, ResetEmailSerializer, PasswordTokenSerializer, LoginSerializer
 from .models import ResetPasswordToken
-
+from tenants.models import TenantMaster
+from .permission import TenantAdminPermission
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
@@ -32,19 +32,19 @@ class LoginView(APIView):
     """
     permission_classes = (permissions.AllowAny,)
     def post(self, request):
+        tenant = request.tenant
         # validation
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        username_or_email = serializer.validated_data['username_or_email']
+        email = serializer.validated_data['email']
         password = serializer.validated_data['password']
 
         # check the existance of user
-        user_obj = User.objects.filter(email__iexact=username_or_email).first() or User.objects.filter(
-            username__iexact=username_or_email).first()
+        user_obj = User.objects.filter(email__iexact=email, tenant__exact=tenant).first()
         if user_obj:
             credentials = {
-                'username': user_obj.username,
+                'email': user_obj.email,
                 'password': password
             }
             if all(credentials.values()):
@@ -63,7 +63,7 @@ class LoginView(APIView):
                     msg = {
                         'token':jwt.encode(payload, SECRET_KEY),
                         'status':'success',
-                        'user'  : user.username
+                        'user'  : user.email
                     }
                     return Response(msg, status=status.HTTP_200_OK)
                 else:
@@ -75,13 +75,13 @@ class LoginView(APIView):
                     )
             else:
                 msg = {
-                    'message' : 'Must include "{username_field}" and "password".',
+                    'message' : 'Must include "{email_field}" and "password".',
                     'status': 'failed',
                 }
                 return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         else:
             msg = {
-                'message':'Account with this email/username does not exists',
+                'message':'Account with this email does not exists',
                 'status' :'failed'
             }
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
@@ -96,43 +96,34 @@ class RegisterView(APIView):
         # validation
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-
-            username = request.data['username']
+            tenant = request.tenant
             email = request.data['email']
             password = request.data['password']
             first_name = request.data['first_name']
             last_name = request.data['last_name']
 
             # check email in user
-            user = User.objects.filter(email__iexact=email).first()
+            user = User.objects.filter(email__iexact=email, tenant__exact=tenant).first()
             if user:
                 msg = {
                     'status'  : 'failed',
                     'message' : 'Email is already existed.'
                 }
                 return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-            # check username in user
-            user = User.objects.filter(username__iexact=username).first()
-            if user:
-                msg={
-                    'status': 'failed',
-                    'message': 'Username is already existed.'
-                }
-                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
 
             # create new User
             user = User.objects.create_user(
-                username=username,
                 email=email,
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                tenant=TenantMaster.objects.filter(company_name__iexact=tenant).first()
             )
             user.set_password(password)
             user.is_active = True
             user.save()
             msg = {
                 'status':'success',
-                'user' : username
+                'user' : email
             }
             return Response(msg, status=status.HTTP_201_CREATED)
 
@@ -161,6 +152,8 @@ class ResetPasswordRequestToken(APIView):
         # validation of request
         serializer = ResetEmailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        tenant = request.tenant
+        curtenant = TenantMaster.objects.filter(company_name=tenant).first()
 
         email = serializer.validated_data['email']
 
@@ -174,7 +167,7 @@ class ResetPasswordRequestToken(APIView):
         ResetPasswordToken.objects.filter(created_at__lte=now_minus_expiry_time).delete()
 
         #find a user with email
-        user = User.objects.filter(email__iexact=email).first()
+        user = User.objects.filter(email__iexact=email, tenant__iexact=tenant).first()
 
         if not user:
             return Response(
@@ -207,6 +200,7 @@ class ResetPasswordRequestToken(APIView):
                     "message": "Message was sent to {}".format(token.user.email)
                 }, status=status.HTTP_200_OK
             )
+
     def send_mail(self, token):
         subject, from_email, to = 'hello', 'no-reply@gmail.com', token.user.email
         text_content = 'This is an important message.'
@@ -272,6 +266,7 @@ class ResetPasswordConfirm(APIView):
             "message":"successfully changed"
         })
 
-@api_view(['GET'])
+@api_view(['POST'])
+@permission_classes((TenantAdminPermission, ))
 def test(request):
     return Response("test",status=status.HTTP_200_OK)

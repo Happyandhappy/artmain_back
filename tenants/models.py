@@ -1,11 +1,15 @@
 from django.db import models
-
+from django.utils.translation import gettext as _
 # Create your models here.
 from tenant_schemas.models import TenantMixin
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 class TenantMaster(TenantMixin):
+    class Meta:
+        verbose_name = _("Tenants")
+        verbose_name_plural = _("Tenants")
+
     id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=100, unique=True, null=False, blank=False)
     company_description = models.TextField(default="")
@@ -65,6 +69,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(db_index=True)
     first_name = models.CharField(max_length=100, default="")
     last_name = models.CharField(max_length=100, default="")
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -76,7 +81,6 @@ class User(AbstractBaseUser):
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
     def get_full_name(self):
     # The user is identified by their email address
         return self.first_name + " " + self.last_name

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 from django.contrib.auth import authenticate
 from rest_framework_jwt.settings import api_settings
@@ -7,10 +8,12 @@ from rest_framework_jwt.settings import api_settings
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
+User = get_user_model()
+
 class UserSerializer(serializers.Serializer):
     class Meta:
         model = User
-        fields = ('username','email', 'password', 'first_name','last_name')
+        fields = ('email', 'password', 'first_name','last_name')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -18,15 +21,15 @@ class UserSerializer(serializers.Serializer):
         }
 
 class CustomJWTSerializer(JSONWebTokenSerializer):
-    username_field = 'username_or_email'
+    email_field = 'email'
 
     def validate(self, attrs):
 
         password = attrs.get("password")
-        user_obj = User.objects.filter(email=attrs.get("username_or_email")).first() or User.objects.filter(username=attrs.get("username_or_email")).first()
+        user_obj = User.objects.filter(email__iexact=attrs.get("email")).first()
         if user_obj is not None:
             credentials = {
-                'username':user_obj.username,
+                'email':user_obj.email,
                 'password': password
             }
             if all(credentials.values()):
@@ -47,15 +50,15 @@ class CustomJWTSerializer(JSONWebTokenSerializer):
                     raise serializers.ValidationError(msg)
 
             else:
-                msg = {"error":_('Must include "{username_field}" and "password".')}
-                # msg = msg.format(username_field=self.username_field)
+                msg = {"error":_('Must include "{email_field}" and "password".')}
+                # msg = msg.format(email_field=self.email_field)
                 raise serializers.ValidationError(msg)
         else:
             msg = {"error":_('Account with this email/username does not exists')}
             raise serializers.ValidationError(msg)
 
 class LoginSerializer(serializers.Serializer):
-    username_or_email = serializers.CharField()
+    email = serializers.CharField()
     password = serializers.CharField()
 
 class ResetEmailSerializer(serializers.Serializer):

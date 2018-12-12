@@ -51,24 +51,30 @@ class UserAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email', 'is_admin','tenant')
+    list_display = ('email', 'is_admin','tenant','first_name','last_name')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'tenant')}),
+        (None, {'fields': ('email', 'password', 'tenant','first_name','last_name')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'tenant')}
+            'fields': ('email', 'password1', 'password2', 'tenant','first_name','last_name','is_admin')}
         ),
     )
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
 
+class TenantAdmin(admin.ModelAdmin):
+    list_display = ('company_name','company_description','company_address','company_city', 'contry_code','company_phone','company_email','company_contact')
+    list_filter = ('company_name',)
+    search_fields = ('company_name',)
+    ordering = ('company_name',)
+    filter_horizontal = ()
+
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
-
-admin.site.register(TenantMaster)
+admin.site.register(TenantMaster, TenantAdmin)

@@ -1,6 +1,6 @@
 from django.db import models
 from tenants.models import TenantMaster
-
+from django.utils.translation import gettext as _
 # Create your models here.
 
 # Timestamp model
@@ -12,6 +12,10 @@ class TimeStampModel(models.Model):
 
 
 class UserGroup(TimeStampModel):
+    class Meta:
+        verbose_name = _("User Group")
+        verbose_name_plural = _("User Group")
+
     userType = models.CharField(max_length=100, primary_key=True, null=False)
     desc = models.TextField()
     def __str__(self):
@@ -19,6 +23,9 @@ class UserGroup(TimeStampModel):
 
 # F000015 Plan
 class Plan(TimeStampModel):
+    class Meta:
+        verbose_name = _("Plan")
+        verbose_name_plural = _("Plan")
     plancode = models.CharField(max_length=100)
     plandescription = models.TextField()
     tier = models.CharField(max_length=50)
@@ -30,8 +37,15 @@ class Plan(TimeStampModel):
     effective_date = models.DateField(auto_now=False)
     status = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.plancode
+
 # Program Object Definition
 class ProgramObject(models.Model):
+    class Meta:
+        verbose_name = _("Program Object Definition")
+        verbose_name_plural = _("Program Object Definition")
+
     progname = models.CharField(primary_key=True, max_length=150)
     d_displayname = models.CharField(max_length=150)
     type = models.CharField(max_length=50)
@@ -42,6 +56,10 @@ class ProgramObject(models.Model):
 
 # F000011 APIMaster
 class APIMaster(TimeStampModel):
+    class Meta:
+        verbose_name = _("API Master")
+        verbose_name_plural =_("API Master")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete = models.CASCADE)
     progname = models.ForeignKey(ProgramObject, on_delete = models.CASCADE)
     direc = models.CharField(max_length=50, )
@@ -58,6 +76,10 @@ class APIMaster(TimeStampModel):
 
 #F000091 User
 class User(TimeStampModel):
+    class Meta:
+        verbose_name = _("User in Tenant")
+        verbose_name_plural = _("User in Tenant")
+
     tenantid = models.ForeignKey(TenantMaster,related_name="user_tenant_id", on_delete=models.CASCADE)
     usertype = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
@@ -71,6 +93,10 @@ class User(TimeStampModel):
 
 #F00001T Field Configurations
 class FieldConfigure(TimeStampModel):
+    class Meta:
+        verbose_name = _("Field Configurations")
+        verbose_name_plural = _("Field Configurations")
+
     tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     tblname = models.CharField(max_length=100)
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
@@ -82,6 +108,10 @@ class FieldConfigure(TimeStampModel):
 
 #F000012 Field UI Configurations
 class FieldUIConfigure(TimeStampModel):
+    class Meta:
+        verbose_name = _("Field UI Configurations")
+        verbose_name_plural = _("Field UI Configurations")
+
     tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     direc = models.CharField(max_length=50, )
     progname = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
@@ -101,6 +131,10 @@ class FieldUIConfigure(TimeStampModel):
 
 #F0000Z	Field Values Definations
 class FieldValDef(TimeStampModel):
+    class Meta:
+        verbose_name = _("Field Values Definations")
+        verbose_name_plural = _("Field Values Definations")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     table    = models.CharField(max_length=100, )
     fieldname  = models.CharField(max_length=100,)
@@ -109,6 +143,10 @@ class FieldValDef(TimeStampModel):
 
 #F00005	Config
 class Config(TimeStampModel):
+    class Meta:
+        verbose_name = _("Config")
+        verbose_name_plural = _("Config")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE,)
     type = models.CharField(max_length=50, )
     tolerance = models.FloatField(null=True)
@@ -118,6 +156,10 @@ class Config(TimeStampModel):
 
 #F000051 Hconfig
 class Hconfig(TimeStampModel):
+    class Meta:
+        verbose_name = _("HConfig")
+        verbose_name_plural = _("HConfig")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     net = models.CharField(max_length=100, )
     description = models.CharField(max_length=100,)
@@ -125,6 +167,10 @@ class Hconfig(TimeStampModel):
 
 #F000081 Menu Definition
 class MenuDef(TimeStampModel):
+    class Meta:
+        verbose_name = _("Menu Definition")
+        verbose_name_plural = _("Menu Definition")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     usergroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
     progname = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
@@ -138,6 +184,10 @@ class MenuDef(TimeStampModel):
 
 #F00003	Customer
 class Customer(TimeStampModel):
+    class Meta:
+        verbose_name = _("Customer")
+        verbose_name_plural = _("Customer")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, )
     description = models.TextField()
@@ -158,6 +208,10 @@ class Customer(TimeStampModel):
 
 #F000031 Partner
 class Partner(TimeStampModel):
+    class Meta:
+        verbose_name = _("Partner")
+        verbose_name_plural = _("Partner")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100,)
     description = models.TextField()
@@ -179,6 +233,10 @@ class Partner(TimeStampModel):
 
 #F000032 Vendor
 class Vendor(TimeStampModel):
+    class Meta:
+        verbose_name = _("Vendor")
+        verbose_name_plural = _("Vendor")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -200,6 +258,10 @@ class Vendor(TimeStampModel):
 
 #F000034 Employee
 class Employee(TimeStampModel):
+    class Meta:
+        verbose_name = _("Employee")
+        verbose_name_plural = _("Employee")
+
     tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
