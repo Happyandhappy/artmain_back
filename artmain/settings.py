@@ -46,21 +46,22 @@ ALLOWED_HOSTS = ["*"]
 SHARED_APPS = (
     'tenant_schemas',  # mandatory
     'tenants',  # you must list the app where your tenant model resides in
+    'authapi',
     'django.contrib.auth',
+    'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
 )
 
 TENANT_APPS = (
     # The following Django contrib apps must be in TENANT_APPS
     'django.contrib.contenttypes',
     'django.contrib.auth',
-    'authapi',
     'transactionapi',
     'masterapi',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 )
 
 
@@ -93,8 +94,9 @@ MIDDLEWARE = [
 ]
 
 TENANT_MODEL = "tenants.TenantMaster"  # app.Model
-AUTH_USER_MODEL = "tenants.User"
+AUTH_USER_MODEL = "authapi.User"
 ROOT_URLCONF = 'artmain.urls'
+
 AUTHENTICATION_BACKENDS = (
         # 'django.contrib.auth.backends.RemoteUserBackend',
         'django.contrib.auth.backends.ModelBackend',
