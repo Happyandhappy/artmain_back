@@ -26,7 +26,7 @@ class Plan(TimeStampModel):
     class Meta:
         verbose_name = _("Plan")
         verbose_name_plural = _("Plan")
-    plancode = models.CharField(max_length=100)
+    plancode = models.CharField(max_length=100, primary_key=True)
     plandescription = models.TextField()
     tier = models.CharField(max_length=50)
     price = models.FloatField(null=True)
@@ -82,6 +82,7 @@ class User(TimeStampModel):
 
     tenantid = models.ForeignKey(TenantMaster,related_name="user_tenant_id", on_delete=models.CASCADE)
     usertype = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
+    userid = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=50)
     desciption = models.TextField()
     address = models.CharField(max_length=200,)

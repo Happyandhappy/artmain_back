@@ -1,5 +1,32 @@
 from django.urls import path, include
-
+from .views import *
 urlpatterns = [
-
+    path('usergroup/<str:pk>', UserGroupView.as_view()),
+    path('usergroup/', UserGroupListView.as_view()),
+    path('plan/<str:pk>', PlanView.as_view()),
+    path('plan/', PlanListView.as_view()),
+    path('progobject/<int:pk>', ProgramObjectView.as_view()),
+    path('progobject/', ProgramObjectListView.as_view()),
+    path('apimaster/<int:pk>', APIMasterView.as_view()),
+    path('apimaster/', APIMasterListView.as_view()),
+    path('user/<int:pk>', UserView.as_view()),
+    path('user/', UserListView.as_view()),
+    path('fieldconfigure/<int:pk>', FieldConfigureView.as_view()),
+    path('fieldconfigure/', FieldConfigureListView.as_view()),
+    path('fielduiconfigure/<int:pk>', FieldUIConfigureView.as_view()),
+    path('fielduiconfigure/', FieldUIConfigureListView.as_view()),
+    path('fieldvaldef/<int:pk>', FieldValDefView.as_view()),
+    path('fieldvaldef/', FieldValDefListView.as_view()),
+    path('config/<int:pk>', ConfigView.as_view()),
+    path('config/', ConfigListView.as_view()),
+    path('hconfig/<int:pk>', HconfigView.as_view()),
+    path('hconfig/', HconfigListView.as_view()),
+    path('customer/<str:name>', CustomerView.as_view()),
+    path('customer/', CustomerListView.as_view()),
+    path('partner/<str:name>', PartnerView.as_view()),
+    path('partner/', PartnerListView.as_view()),
+    path('vendor/<str:name>', VendorView.as_view()),
+    path('vendor/', VendorListView.as_view()),
+    path('employee/<str:name>', EmployeeView.as_view()),
+    path('employee/', EmployeeListView.as_view())
 ]

@@ -1,61 +1,61 @@
 from rest_framework import serializers
 from .models import *
 
-class UserGroupSerializer(serializers.Serializer):
+class UserGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserGroup
         fields = ('userType','desc',)
 
-class PlanSerializer(serializers.Serializer):
+class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ('plancode','plandescription','tier','price','terms','threshold','multiplier','effective_date',)
 
-class ProgramObjectSerializer(serializers.Serializer):
+class ProgramObjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramObject
         fields = '__all__'
 
-class APIMasterSerializer(serializers.Serializer):
+class APIMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model  = APIMaster
         fields = '__all__'
 
-class UserSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-class FieldConfigureSerializer(serializers.Serializer):
+class FieldConfigureSerializer(serializers.ModelSerializer):
     class Meta:
         model = FieldConfigure
         fields = '__all__'
 
-class FieldUIConfigureSerializer(serializers.Serializer):
+class FieldUIConfigureSerializer(serializers.ModelSerializer):
     class Meta:
         model = FieldUIConfigure
         fields = ('tanentid', 'direc', 'progname', 'type', 'defname', 'changedname', 'desctription', 'fieldname', 'fieldtype', 'widget', 'visible', 'position', 'action', 'defvalue')
 
-class FieldValDefSerializer(serializers.Serializer):
+class FieldValDefSerializer(serializers.ModelSerializer):
     class Meta:
         model = FieldValDef
         fields = '__all__'
 
-class ConfigSerializer(serializers.Serializer):
+class ConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = Config
         fields = '__all__'
 
-class HconfigSerializer(serializers.Serializer):
+class HconfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hconfig
         fields = '__all__'
 
-class MenuDefSerializer(serializers.Serializer):
+class MenuDefSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuDef
         fields = ('tenantid','usergroup','progname','type','menuname')
 
-class CustomerSerializer(serializers.Serializer):
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = (
@@ -68,7 +68,7 @@ class CustomerSerializer(serializers.Serializer):
                   'status'
         )
 
-class PartnerSerializer(serializers.Serializer):
+class PartnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partner
         fields = (
@@ -80,7 +80,7 @@ class PartnerSerializer(serializers.Serializer):
                 'control', 'plan',
                 'status')
 
-class VendorSerializer(serializers.Serializer):
+class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
         fields = (
@@ -93,7 +93,7 @@ class VendorSerializer(serializers.Serializer):
             'status'
         )
 
-class EmployeeSerializer(serializers.Serializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
