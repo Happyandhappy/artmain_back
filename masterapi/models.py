@@ -16,7 +16,7 @@ class UserGroup(TimeStampModel):
         verbose_name = _("User Group")
         verbose_name_plural = _("User Group")
 
-    userType = models.CharField(max_length=100, primary_key=True, null=False)
+    userType = models.CharField(max_length=100, null=False)
     desc = models.TextField()
     def __str__(self):
         return self.userType
@@ -26,7 +26,7 @@ class Plan(TimeStampModel):
     class Meta:
         verbose_name = _("Plan")
         verbose_name_plural = _("Plan")
-    plancode = models.CharField(max_length=100, primary_key=True)
+    plancode = models.CharField(max_length=100)
     plandescription = models.TextField()
     tier = models.CharField(max_length=50)
     price = models.FloatField(null=True)
@@ -46,7 +46,7 @@ class ProgramObject(models.Model):
         verbose_name = _("Program Object Definition")
         verbose_name_plural = _("Program Object Definition")
 
-    progname = models.CharField(primary_key=True, max_length=150)
+    progname = models.CharField(max_length=150)
     d_displayname = models.CharField(max_length=150)
     type = models.CharField(max_length=50)
     status = models.BooleanField(default=False)
@@ -60,7 +60,7 @@ class APIMaster(TimeStampModel):
         verbose_name = _("API Master")
         verbose_name_plural =_("API Master")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete = models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete = models.CASCADE)
     progname = models.ForeignKey(ProgramObject, on_delete = models.CASCADE)
     direc = models.CharField(max_length=50, )
     type = models.CharField(max_length=50, )
@@ -80,9 +80,9 @@ class User(TimeStampModel):
         verbose_name = _("User in Tenant")
         verbose_name_plural = _("User in Tenant")
 
-    tenantid = models.ForeignKey(TenantMaster,related_name="user_tenant_id", on_delete=models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster,related_name="user_tenant_id", on_delete=models.CASCADE)
     usertype = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
-    userid = models.CharField(max_length=50, primary_key=True)
+    userid = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     desciption = models.TextField()
     address = models.CharField(max_length=200,)
@@ -98,7 +98,7 @@ class FieldConfigure(TimeStampModel):
         verbose_name = _("Field Configurations")
         verbose_name_plural = _("Field Configurations")
 
-    tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     tblname = models.CharField(max_length=100)
     group = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
     userid = models.ForeignKey(User, models.SET_NULL, null=True,blank=True,)
@@ -113,7 +113,7 @@ class FieldUIConfigure(TimeStampModel):
         verbose_name = _("Field UI Configurations")
         verbose_name_plural = _("Field UI Configurations")
 
-    tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tanentid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     direc = models.CharField(max_length=50, )
     progname = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
     type = models.CharField(max_length=50, )
@@ -136,9 +136,9 @@ class FieldValDef(TimeStampModel):
         verbose_name = _("Field Values Definations")
         verbose_name_plural = _("Field Values Definations")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
-    table    = models.CharField(max_length=100, )
-    fieldname  = models.CharField(max_length=100,)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    table    = models.CharField(max_length=100)
+    fieldname  = models.CharField(max_length=100)
     type     = models.CharField(max_length=100, default='json')
     value    = models.TextField(default="{}")
 
@@ -148,8 +148,8 @@ class Config(TimeStampModel):
         verbose_name = _("Config")
         verbose_name_plural = _("Config")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE,)
-    type = models.CharField(max_length=50, )
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE,)
+    type = models.CharField(max_length=50)
     tolerance = models.FloatField(null=True)
     scalingfactor = models.FloatField(null=True)
     match = models.FloatField(null=True)
@@ -161,7 +161,7 @@ class Hconfig(TimeStampModel):
         verbose_name = _("HConfig")
         verbose_name_plural = _("HConfig")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     net = models.CharField(max_length=100, )
     description = models.CharField(max_length=100,)
 
@@ -172,7 +172,7 @@ class MenuDef(TimeStampModel):
         verbose_name = _("Menu Definition")
         verbose_name_plural = _("Menu Definition")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     usergroup = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
     progname = models.ForeignKey(ProgramObject, on_delete=models.CASCADE)
     type = models.CharField(max_length=50, )
@@ -189,8 +189,8 @@ class Customer(TimeStampModel):
         verbose_name = _("Customer")
         verbose_name_plural = _("Customer")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, )
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     address = models.CharField(max_length=100, )
     country = models.CharField(max_length=100, )
@@ -213,8 +213,8 @@ class Partner(TimeStampModel):
         verbose_name = _("Partner")
         verbose_name_plural = _("Partner")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100,)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
     description = models.TextField()
     address = models.CharField(max_length=100,)
     country = models.CharField(max_length=100,)
@@ -238,7 +238,7 @@ class Vendor(TimeStampModel):
         verbose_name = _("Vendor")
         verbose_name_plural = _("Vendor")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
     address = models.CharField(max_length=100)
@@ -263,7 +263,7 @@ class Employee(TimeStampModel):
         verbose_name = _("Employee")
         verbose_name_plural = _("Employee")
 
-    tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
+    # tenantid = models.ForeignKey(TenantMaster, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
     address = models.CharField(max_length=100)

@@ -8,7 +8,7 @@ Drop all tables of database you given.
 """
 
 try:
-    conn = psycopg2.connect("postgres://umuayzpwcqddpc:8170a674f50641c738b20d585f6e252fb673f77f30714d918be940038bdd1a10@ec2-54-197-249-140.compute-1.amazonaws.com:5432/d7qvmk0t47ltii")
+    conn = psycopg2.connect("postgres://ucshrajlbldvmt:c2289d70e17a51fed9063a7d62299035c4a55fd7146274648c4e8ef56e8d2fb3@ec2-23-21-188-236.compute-1.amazonaws.com:5432/d88dvn90epfvqe")
     conn.set_isolation_level(0)
 except:
     print("Unable to connect to the database.")

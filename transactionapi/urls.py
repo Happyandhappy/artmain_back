@@ -1,5 +1,25 @@
 from django.urls import path, include
-
+from .views import *
 urlpatterns = [
-
+    path('F0000Z1/', F0000Z1ListView.as_view()),
+    path('F0000Z1/<pk>', F0000Z1View.as_view()),
+    path('F00050/',  F00050ListView.as_view()),
+    path('F00050/<pk>',  F00050View.as_view()),
+    path('F00051/',  F00051ListView.as_view()),
+    path('F00051/<pk>',  F00051View.as_view()),
+    path('F000502/', F000502ListView.as_view()),
+    path('F000502/<pk>', F000502View.as_view()),
+    path('F00060/',  F00060ListView.as_view()),
+    path('F00060/<pk>',  F00060View.as_view()),
+    path('F00061/',  F00061ListView.as_view()),
+    path('F00061/<pk>',  F00061View.as_view()),
+    path('F00062/',  F00062ListView.as_view()),
+    path('F00062/<pk>',  F00062View.as_view()),
+    path('F00063/<pk>',  F00063View.as_view()),
+    path('F00063/',  F00063ListView.as_view()),
+    path('F00064/',  F00064ListView.as_view()),
+    path('F00064/<pk>',  F00064View.as_view()),
+    path('F00065/',  F00065ListView.as_view()),
+    path('F00065/<pk>',  F00065View.as_view()),
+    path('UploadCSV/', UploadCSV.as_view()),
 ]

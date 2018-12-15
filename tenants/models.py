@@ -8,8 +8,7 @@ class TenantMaster(TenantMixin):
         verbose_name = _("Tenants")
         verbose_name_plural = _("Tenants")
 
-    id = models.AutoField(primary_key=True)
-    company_name = models.CharField(max_length=100, unique=True, null=False, blank=False)
+    company_name = models.CharField(max_length=100, null=False, blank=False)
     company_description = models.TextField(default="")
     company_address = models.CharField(max_length=200, null=True, blank=True)
     company_city = models.CharField(max_length=200, null=True, blank=True)

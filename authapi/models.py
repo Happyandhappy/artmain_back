@@ -92,15 +92,12 @@ class User(AbstractBaseUser):
     date_added = models.DateField(auto_now=False, auto_now_add=True)
     date_updated = models.DateField(auto_now=True)
     tenant = models.ForeignKey(TenantMaster, models.SET_NULL, blank=True, null=True,)
-    email = models.EmailField(db_index=True)
+    email = models.EmailField(db_index=True, unique=True)
     first_name = models.CharField(max_length=100, default="")
     last_name = models.CharField(max_length=100, default="")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
-    class Meta:
-        unique_together = ('tenant', 'email',)
 
     def __unicode__(self):
         return self.email

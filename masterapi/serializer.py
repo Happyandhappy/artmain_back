@@ -19,6 +19,7 @@ class ProgramObjectSerializer(serializers.ModelSerializer):
 class APIMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model  = APIMaster
+        # tenantid = serializers.RelatedField(source='tenants.TenantMaster', write_only=True)
         fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):

@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authapi.urls')),
     path('master/', include('masterapi.urls')),
-    path('transaction/', include('transactionapi.urls'))
+    path('transaction/', include('transactionapi.urls')),
+    path('tenants/', include('tenants.urls')),
 ]

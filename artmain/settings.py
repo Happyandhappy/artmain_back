@@ -47,6 +47,8 @@ SHARED_APPS = (
     'tenant_schemas',  # mandatory
     'tenants',  # you must list the app where your tenant model resides in
     'authapi',
+    'masterapi',
+    'transactionapi',
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.admin',
@@ -58,13 +60,12 @@ TENANT_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.admin',
-    'transactionapi',
     'masterapi',
+    'authapi',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-
 
 INSTALLED_APPS = [
     'tenant_schemas',
@@ -117,7 +118,7 @@ TEMPLATES = [
         },
     },
 ]
-
+TEMPLATE_CONTEXT_PROCESSORS = ('django.context_processor.request',)
 WSGI_APPLICATION = 'artmain.wsgi.application'
 
 
@@ -133,8 +134,9 @@ DATABASES = {
         'HOST': env.str('DB_HOST'),
         'PORT': '5432',
         'OPTIONS': {'sslmode': 'require'},
-    }
+    },
 }
+
 ##Add tenant_schemas.routers.TenantSyncRouter to your DATABASE_ROUTERS setting,
 ##so that the correct apps can be synced, depending on what’s being synced (shared or tenant).
 DATABASE_ROUTERS = (
@@ -191,9 +193,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:4200',
-    # 'https://' + env('SITE_DOMAIN'),
+    '*',
 )
 
 CORS_ALLOW_HEADERS = default_headers + (
@@ -224,9 +224,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
-
+ANGULAR_APP_DIR = os.path.join(BASE_DIR, 'frontend/dist')
+STATICFILES_DIRS = [
+        os.path.join(ANGULAR_APP_DIR),
+    ]
 
 # email configuration
 EMAIL_HOST = env.str('EMAIL_HOST')
